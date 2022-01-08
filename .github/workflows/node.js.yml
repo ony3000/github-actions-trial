@@ -11,10 +11,9 @@ on:
     branches: [ master, test ]
 
 env:
-  COLORS:
-    WARNING: "#daa038"
-    DANGER: "#a30200"
-    SUCCESS: "#2eb886"
+  WARNING_COLOR: "#daa038"
+  DANGER_COLOR: "#a30200"
+  SUCCESS_COLOR: "#2eb886"
 
 # job은 사용자가 정한 플랫폼을 통해, step이라는 일련의 과정을 실행할 수 있음.
 # 여러 개의 job을 실행할 수 있으며, 여러 개의 job을 실행할 때는 서로 정보 교환도 가능.
@@ -112,7 +111,7 @@ jobs:
             "attachments": [
               {
                 "mrkdwn_in": ["text"],
-                "color": "${{ env.COLORS.WARNING }}",
+                "color": "${{ env.WARNING_COLOR }}",
                 "pretext": ":warning: Canceled GitHub Actions",
                 "author_name": "${{ github.actor }}",
                 "author_link": "${{ github.server_url }}/${{ github.actor }}",
@@ -147,7 +146,7 @@ jobs:
             "attachments": [
               {
                 "mrkdwn_in": ["text"],
-                "color": "${{ env.COLORS.DANGER }}",
+                "color": "${{ env.DANGER_COLOR }}",
                 "pretext": ":no_entry: Failed GitHub Actions",
                 "author_name": "${{ github.actor }}",
                 "author_link": "${{ github.server_url }}/${{ github.actor }}",
@@ -182,7 +181,7 @@ jobs:
             "attachments": [
               {
                 "mrkdwn_in": ["text"],
-                "color": "${{ env.COLORS.SUCCESS }}",
+                "color": "${{ env.SUCCESS_COLOR }}",
                 "pretext": ":white_check_mark: Succeeded GitHub Actions",
                 "author_name": "${{ github.actor }}",
                 "author_link": "${{ github.server_url }}/${{ github.actor }}",
