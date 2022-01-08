@@ -92,6 +92,7 @@ jobs:
 
   cooldown:
     needs: build
+    if: ${{ always() }}
 
     name: Post end-message to slack
     runs-on: ubuntu-latest
