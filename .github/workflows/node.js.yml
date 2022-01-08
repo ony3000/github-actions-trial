@@ -57,7 +57,20 @@ jobs:
       if: ${{ github.ref_name == 'master' }}
       uses: slackapi/slack-github-action@v1.16.0
       with:
-        payload: '{"text":":hammer_and_wrench: ${{ github.repository }}의 production 배포를 시작합니다."}'
+        payload: |
+          {
+            "attachments": [
+              {
+                "mrkdwn_in": ["text"],
+                "pretext": ":hammer_and_wrench: 샘플 프로젝트의 production 배포를 시작합니다.",
+                "author_name": "${{ github.actor }}",
+                "author_link": "${{ github.server_url }}/${{ github.actor }}",
+                "author_icon": "${{ github.server_url }}/${{ github.actor }}.png?size=16",
+                "title": "${{ github.workflow }} #${{ github.run_number }}",
+                "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+              }
+            ]
+          }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
@@ -113,9 +126,6 @@ jobs:
                 "mrkdwn_in": ["text"],
                 "color": "${{ env.WARNING_COLOR }}",
                 "pretext": ":warning: Canceled GitHub Actions",
-                "author_name": "${{ github.actor }}",
-                "author_link": "${{ github.server_url }}/${{ github.actor }}",
-                "author_icon": "${{ github.server_url }}/${{ github.actor }}.png?size=16",
                 "title": "${{ github.workflow }} #${{ github.run_number }}",
                 "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
                 "text": "Optional `text` that appears within the attachment"
@@ -148,9 +158,6 @@ jobs:
                 "mrkdwn_in": ["text"],
                 "color": "${{ env.DANGER_COLOR }}",
                 "pretext": ":no_entry: Failed GitHub Actions",
-                "author_name": "${{ github.actor }}",
-                "author_link": "${{ github.server_url }}/${{ github.actor }}",
-                "author_icon": "${{ github.server_url }}/${{ github.actor }}.png?size=16",
                 "title": "${{ github.workflow }} #${{ github.run_number }}",
                 "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
                 "text": "Optional `text` that appears within the attachment"
@@ -183,9 +190,6 @@ jobs:
                 "mrkdwn_in": ["text"],
                 "color": "${{ env.SUCCESS_COLOR }}",
                 "pretext": ":white_check_mark: Succeeded GitHub Actions",
-                "author_name": "${{ github.actor }}",
-                "author_link": "${{ github.server_url }}/${{ github.actor }}",
-                "author_icon": "${{ github.server_url }}/${{ github.actor }}.png?size=16",
                 "title": "${{ github.workflow }} #${{ github.run_number }}",
                 "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
                 "text": "Optional `text` that appears within the attachment"
