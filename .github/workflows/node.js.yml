@@ -94,7 +94,7 @@ jobs:
     needs: build
     if: ${{ cancelled() }}
 
-    name: Post end-message to slack
+    name: Post cancelled-message to slack
     runs-on: ubuntu-latest
 
     steps:
@@ -110,7 +110,7 @@ jobs:
     needs: build
     if: ${{ failure() }}
 
-    name: Post end-message to slack
+    name: Post failure-message to slack
     runs-on: ubuntu-latest
 
     steps:
@@ -126,7 +126,7 @@ jobs:
     needs: build
     if: ${{ success() }}
 
-    name: Post end-message to slack
+    name: Post success-message to slack
     runs-on: ubuntu-latest
 
     steps:
