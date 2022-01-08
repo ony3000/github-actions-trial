@@ -9,5 +9,5 @@ test('renders learn react link', () => {
 
 test('random number test', () => {
   const randomNumber = Math.random();
-  expect(randomNumber).toBeLessThan(0.5);
+  expect(randomNumber).toBeLessThan(Math.SQRT1_2);
 });
