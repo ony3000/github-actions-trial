@@ -90,17 +90,15 @@ jobs:
     - run: npm run build --if-present
     - run: npm test
 
-  cooldown:
+  cooldown-cancelled:
     needs: build
-    if: ${{ always() }}
+    if: ${{ cancelled() }}
 
     name: Post end-message to slack
     runs-on: ubuntu-latest
 
     steps:
-
-    - name: slack-send (cancelled)
-      if: ${{ cancelled() }}
+    - name: slack-send
       uses: slackapi/slack-github-action@v1.16.0
       with:
         payload: '{"text":":warning: 배포 취소!"}'
@@ -108,8 +106,15 @@ jobs:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-    - name: slack-send (failure)
-      if: ${{ failure() }}
+  cooldown-failure:
+    needs: build
+    if: ${{ failure() }}
+
+    name: Post end-message to slack
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: slack-send
       uses: slackapi/slack-github-action@v1.16.0
       with:
         payload: '{"text":":x: 배포 실패!"}'
@@ -117,20 +122,18 @@ jobs:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-    - name: slack-send (success)
-      if: ${{ success() }}
+  cooldown-success:
+    needs: build
+    if: ${{ success() }}
+
+    name: Post end-message to slack
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: slack-send
       uses: slackapi/slack-github-action@v1.16.0
       with:
         payload: '{"text":":white_check_mark: 배포 성공!"}'
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
-        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
-    - name: slack-send (always)
-      if: ${{ always() }}
-      uses: slackapi/slack-github-action@v1.16.0
-      with:
-        payload: '{"text":"${{ github.repository }}의 배포 프로세스가 종료되었습니다."}'
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
