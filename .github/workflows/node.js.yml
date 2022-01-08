@@ -121,7 +121,6 @@ jobs:
         # payload: '{"text":":no_entry: Failed GitHub Actions"}'
         # payload: '{"attachments":[{"pretext":":no_entry: pre-hello","text":":no_entry: text-world"}]}'
 
-        payload: '{"attachments":[{"pretext":":no_entry: pre-hello","text":":no_entry: text-world"}]}'
         payload: |
           {
             attachments: [
