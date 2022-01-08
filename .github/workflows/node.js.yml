@@ -115,7 +115,8 @@ jobs:
     - name: slack-send (slack-github-action)
       uses: slackapi/slack-github-action@v1.16.0
       with:
-        payload: '{"text":":no_entry: Failed GitHub Actions"}'
+        # payload: '{"text":":no_entry: Failed GitHub Actions"}'
+        payload: '{"attachments":[{"pretext":":no_entry: pre-hello","text":":no_entry: text-world"}]}'
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
@@ -131,7 +132,8 @@ jobs:
     - name: slack-send (slack-github-action)
       uses: slackapi/slack-github-action@v1.16.0
       with:
-        payload: '{"text":":white_check_mark: Succeeded GitHub Actions"}'
+        # payload: '{"text":":white_check_mark: Succeeded GitHub Actions"}'
+        payload: '{"attachments":[{"pretext":":white_check_mark: pre-hello","text":":white_check_mark: text-world"}]}'
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
