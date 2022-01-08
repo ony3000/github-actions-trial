@@ -2,15 +2,16 @@
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
 # workflow의 이름. 나중에 해당 값을 사용할 수 있기 때문에 unique한 값을 권장함.
-name: Test on push/PR at master
+name: Test on push
 
 # workflow를 동작하게 하는 trigger.
 # 저장소에 특정 이벤트가 발생했을 때 실행되게 할 수 있음.
 on:
   push:
     branches: [ master, test ]
-  pull_request:
-    branches: [ master ]
+
+env:
+  ACTION_SLACK_FIELDS: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest
 
 # job은 사용자가 정한 플랫폼을 통해, step이라는 일련의 과정을 실행할 수 있음.
 # 여러 개의 job을 실행할 수 있으며, 여러 개의 job을 실행할 때는 서로 정보 교환도 가능.
@@ -98,13 +99,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: slack-send
+    - name: slack-send (slack-github-action)
       uses: slackapi/slack-github-action@v1.16.0
       with:
         payload: '{"text":":warning: 배포 취소!"}'
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+    - name: slack-send (action-slack)
+      uses: 8398a7/action-slack@v3
+      with:
+        status: cancelled
+        author_name: "$GITHUB_WORKFLOW #$GITHUB_RUN_NUMBER"
+        fields: ${{ env.ACTION_SLACK_FIELDS }}
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
 
   cooldown-failure:
     needs: build
@@ -114,20 +124,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: slack-send
-      uses: 8398a7/action-slack@v3
+    - name: slack-send (slack-github-action)
+      uses: slackapi/slack-github-action@v1.16.0
       with:
-        status: ${{ job.status }}
-        author_name: Integration Test
-        fields: repo,commit,message,author
+        payload: '{"text":":x: 배포 실패!"}'
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
-      # uses: slackapi/slack-github-action@v1.16.0
-      # with:
-      #   payload: '{"text":":x: 배포 실패!"}'
-      # env:
-      #   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
-      #   SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+    - name: slack-send (action-slack)
+      uses: 8398a7/action-slack@v3
+      with:
+        status: failure
+        author_name: "$GITHUB_WORKFLOW #$GITHUB_RUN_NUMBER"
+        fields: ${{ env.ACTION_SLACK_FIELDS }}
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
 
   cooldown-success:
     needs: build
@@ -137,17 +149,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: slack-send
-      uses: 8398a7/action-slack@v3
+    - name: slack-send (slack-github-action)
+      uses: slackapi/slack-github-action@v1.16.0
       with:
-        status: ${{ job.status }}
-        author_name: Integration Test
-        fields: repo,commit,message,author
+        payload: '{"text":":white_check_mark: 배포 성공!"}'
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
-      # uses: slackapi/slack-github-action@v1.16.0
-      # with:
-      #   payload: '{"text":":white_check_mark: 배포 성공!"}'
-      # env:
-      #   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
-      #   SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+    - name: slack-send (action-slack)
+      uses: 8398a7/action-slack@v3
+      with:
+        status: success
+        author_name: "$GITHUB_WORKFLOW #$GITHUB_RUN_NUMBER"
+        fields: ${{ env.ACTION_SLACK_FIELDS }}
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
