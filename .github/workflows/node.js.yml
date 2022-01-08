@@ -123,16 +123,16 @@ jobs:
 
         payload: |
           {
-            attachments: [
+            "attachments": [
               {
-                mrkdwn_in: ['text'],
-                color: '#a30200',
-                pretext: ':no_entry: Failed GitHub Actions',
-                author_name: '${{ github.actor }}',
-                author_link: '${{ github.server_url }}/${{ github.actor }}',
-                title: '${{ github.workflow }} #${{ github.run_number }}',
-                title_link: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}',
-                text: 'Optional `text` that appears within the attachment'
+                "mrkdwn_in": ["text"],
+                "color": "#a30200",
+                "pretext": ":white_check_mark: Succeeded GitHub Actions",
+                "author_name": "${{ github.actor }}",
+                "author_link": "${{ github.server_url }}/${{ github.actor }}",
+                "title": "${{ github.workflow }} #${{ github.run_number }}",
+                "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                "text": "Optional `text` that appears within the attachment"
               }
             ]
           }
