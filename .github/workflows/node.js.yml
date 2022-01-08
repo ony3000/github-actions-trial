@@ -39,6 +39,8 @@ jobs:
       with:
         # payload 형식은 https://api.slack.com/methods/chat.postMessage 를 참고.
         # message 형식은 https://api.slack.com/reference/surfaces/formatting 을 참고.
+        # attachment 형식은 https://api.slack.com/reference/messaging/attachments 를 참고.
+
         # 기본 환경변수는 https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables 를 참고.
 
         payload: '{"text":":hammer_and_wrench: ${{ github.repository }}의 test 배포를 시작합니다."}'
@@ -115,8 +117,26 @@ jobs:
     - name: slack-send (slack-github-action)
       uses: slackapi/slack-github-action@v1.16.0
       with:
+        # works fine
         # payload: '{"text":":no_entry: Failed GitHub Actions"}'
+        # payload: '{"attachments":[{"pretext":":no_entry: pre-hello","text":":no_entry: text-world"}]}'
+
         payload: '{"attachments":[{"pretext":":no_entry: pre-hello","text":":no_entry: text-world"}]}'
+        payload: |
+          {
+            attachments: [
+              {
+                mrkdwn_in: ['text'],
+                color: '#a30200',
+                pretext: ':no_entry: Failed GitHub Actions',
+                author_name: '${{ github.actor }}',
+                author_link: '${{ github.server_url }}/${{ github.actor }}',
+                title: '${{ github.workflow }} #${{ github.run_number }}',
+                title_link: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}',
+                text: 'Optional `text` that appears within the attachment'
+              }
+            ]
+          }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
@@ -132,8 +152,11 @@ jobs:
     - name: slack-send (slack-github-action)
       uses: slackapi/slack-github-action@v1.16.0
       with:
+        # works fine
         # payload: '{"text":":white_check_mark: Succeeded GitHub Actions"}'
-        payload: '{"attachments":[{"pretext":":white_check_mark: pre-hello","text":":white_check_mark: text-world"}]}'
+        # payload: '{"attachments":[{"pretext":":white_check_mark: pre-hello","text":":white_check_mark: text-world"}]}'
+
+        payload: '{"attachments":[{"mrkdwn_in":["text"],"color":"#2eb886","pretext":":white_check_mark: Succeeded GitHub Actions","author_name":"${{ github.actor }}","author_link":"${{ github.server_url }}/${{ github.actor }}","title":"${{ github.workflow }} #${{ github.run_number }}","title_link":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","text":"Optional `text` that appears within the attachment"}]}'
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
