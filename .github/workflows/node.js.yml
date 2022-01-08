@@ -11,7 +11,7 @@ on:
     branches: [ master, test ]
 
 env:
-  ACTION_SLACK_FIELDS: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest
+  ACTION_SLACK_FIELDS: workflow,job,commit,repo,ref,author,took
 
 # job은 사용자가 정한 플랫폼을 통해, step이라는 일련의 과정을 실행할 수 있음.
 # 여러 개의 job을 실행할 수 있으며, 여러 개의 job을 실행할 때는 서로 정보 교환도 가능.
@@ -110,9 +110,16 @@ jobs:
     - name: slack-send (action-slack)
       uses: 8398a7/action-slack@v3
       with:
-        status: cancelled
-        author_name: "$GITHUB_WORKFLOW #$GITHUB_RUN_NUMBER"
+        job_name: Post cancelled-message to slack
+        status: custom
         fields: ${{ env.ACTION_SLACK_FIELDS }}
+        custom_payload: |
+          {
+            attachments: [{
+              color: 'good',
+              text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
+            }]
+          }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
 
@@ -135,9 +142,16 @@ jobs:
     - name: slack-send (action-slack)
       uses: 8398a7/action-slack@v3
       with:
-        status: failure
-        author_name: "$GITHUB_WORKFLOW #$GITHUB_RUN_NUMBER"
+        job_name: Post failure-message to slack
+        status: custom
         fields: ${{ env.ACTION_SLACK_FIELDS }}
+        custom_payload: |
+          {
+            attachments: [{
+              color: 'danger',
+              text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
+            }]
+          }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
 
@@ -160,8 +174,15 @@ jobs:
     - name: slack-send (action-slack)
       uses: 8398a7/action-slack@v3
       with:
-        status: success
-        author_name: "$GITHUB_WORKFLOW #$GITHUB_RUN_NUMBER"
+        job_name: Post success-message to slack
+        status: custom
         fields: ${{ env.ACTION_SLACK_FIELDS }}
+        custom_payload: |
+          {
+            attachments: [{
+              color: 'good',
+              text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
+            }]
+          }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
