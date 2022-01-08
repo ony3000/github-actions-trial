@@ -6,3 +6,8 @@ test('renders learn react link', () => {
   const linkElement = screen.getByText(/learn react/i);
   expect(linkElement).toBeInTheDocument();
 });
+
+test('random number test', () => {
+  const randomNumber = Math.random();
+  expect(randomNumber).toBeLessThan(0.5);
+});
