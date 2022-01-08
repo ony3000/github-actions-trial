@@ -8,7 +8,7 @@ name: Test on push/PR at master
 # 저장소에 특정 이벤트가 발생했을 때 실행되게 할 수 있음.
 on:
   push:
-    branches: [ master ]
+    branches: [ master, test ]
   pull_request:
     branches: [ master ]
 
