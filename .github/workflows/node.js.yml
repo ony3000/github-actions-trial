@@ -156,21 +156,22 @@ jobs:
         # payload: '{"text":":white_check_mark: Succeeded GitHub Actions"}'
         # payload: '{"attachments":[{"pretext":":white_check_mark: pre-hello","text":":white_check_mark: text-world"}]}'
 
-        payload: {
-          "attachments": [
-            {
-              "mrkdwn_in": ["text"],
-              "color": "#2eb886",
-              "pretext": ":white_check_mark: Succeeded GitHub Actions",
-              "author_name": "${{ github.actor }}",
-              "author_link": "${{ github.server_url }}/${{ github.actor }}",
-              "author_icon": "${{ github.server_url }}/${{ github.actor }}.png?size=16",
-              "title": "${{ github.workflow }} #${{ github.run_number }}",
-              "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-              "text": "Optional `text` that appears within the attachment"
-            }
-          ]
-        }
+        payload: |
+          {
+            "attachments": [
+              {
+                "mrkdwn_in": ["text"],
+                "color": "#2eb886",
+                "pretext": ":white_check_mark: Succeeded GitHub Actions",
+                "author_name": "${{ github.actor }}",
+                "author_link": "${{ github.server_url }}/${{ github.actor }}",
+                "author_icon": "${{ github.server_url }}/${{ github.actor }}.png?size=16",
+                "title": "${{ github.workflow }} #${{ github.run_number }}",
+                "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                "text": "Optional `text` that appears within the attachment"
+              }
+            ]
+          }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
