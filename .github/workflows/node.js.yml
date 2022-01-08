@@ -16,18 +16,22 @@ on:
 # 여러 개의 job을 실행할 수 있으며, 여러 개의 job을 실행할 때는 서로 정보 교환도 가능.
 # 각 job을 독립적으로 실행하는 것도 가능.
 jobs:
-  setup:
+  warmup:
+    name: Post begin-message to slack
+
     runs-on: ubuntu-latest
     steps:
     - name: slack-send
       uses: slackapi/slack-github-action@v1.16.0
       with:
-        payload: '{"text":"Lorem ipsum"}'
+        payload: '{"text":"배포 프로세스를 시작합니다."}'
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
   build:
+    needs: warmup
+
     # job의 이름.
     name: Sample job name
 
@@ -57,3 +61,18 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+
+  cooldown:
+    needs: build
+
+    name: Post end-message to slack
+
+    runs-on: ubuntu-latest
+    steps:
+    - name: slack-send
+      uses: slackapi/slack-github-action@v1.16.0
+      with:
+        payload: '{"text":"배포 프로세스가 종료되었습니다."}'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
