@@ -91,6 +91,22 @@ jobs:
     - run: npm run build --if-present
     - run: npm test
 
+    - name: slack-send
+      uses: 8398a7/action-slack@v3
+      with:
+        job_name: Sample job name
+        status: custom
+        fields: ${{ env.ACTION_SLACK_FIELDS }}
+        custom_payload: |
+          {
+            attachments: [{
+              color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+              text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
+            }]
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
+
   cooldown-cancelled:
     needs: build
     if: ${{ cancelled() }}
@@ -107,21 +123,21 @@ jobs:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-    - name: slack-send (action-slack)
-      uses: 8398a7/action-slack@v3
-      with:
-        job_name: Post cancelled-message to slack
-        status: custom
-        fields: ${{ env.ACTION_SLACK_FIELDS }}
-        custom_payload: |
-          {
-            attachments: [{
-              color: 'good',
-              text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
-            }]
-          }
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
+    # - name: slack-send (action-slack)
+    #   uses: 8398a7/action-slack@v3
+    #   with:
+    #     job_name: Post cancelled-message to slack
+    #     status: custom
+    #     fields: ${{ env.ACTION_SLACK_FIELDS }}
+    #     custom_payload: |
+    #       {
+    #         attachments: [{
+    #           color: 'good',
+    #           text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
+    #         }]
+    #       }
+    #   env:
+    #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
 
   cooldown-failure:
     needs: build
@@ -139,21 +155,21 @@ jobs:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-    - name: slack-send (action-slack)
-      uses: 8398a7/action-slack@v3
-      with:
-        job_name: Post failure-message to slack
-        status: custom
-        fields: ${{ env.ACTION_SLACK_FIELDS }}
-        custom_payload: |
-          {
-            attachments: [{
-              color: 'danger',
-              text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
-            }]
-          }
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
+    # - name: slack-send (action-slack)
+    #   uses: 8398a7/action-slack@v3
+    #   with:
+    #     job_name: Post failure-message to slack
+    #     status: custom
+    #     fields: ${{ env.ACTION_SLACK_FIELDS }}
+    #     custom_payload: |
+    #       {
+    #         attachments: [{
+    #           color: 'danger',
+    #           text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
+    #         }]
+    #       }
+    #   env:
+    #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
 
   cooldown-success:
     needs: build
@@ -171,18 +187,18 @@ jobs:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-    - name: slack-send (action-slack)
-      uses: 8398a7/action-slack@v3
-      with:
-        job_name: Post success-message to slack
-        status: custom
-        fields: ${{ env.ACTION_SLACK_FIELDS }}
-        custom_payload: |
-          {
-            attachments: [{
-              color: 'good',
-              text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
-            }]
-          }
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
+    # - name: slack-send (action-slack)
+    #   uses: 8398a7/action-slack@v3
+    #   with:
+    #     job_name: Post success-message to slack
+    #     status: custom
+    #     fields: ${{ env.ACTION_SLACK_FIELDS }}
+    #     custom_payload: |
+    #       {
+    #         attachments: [{
+    #           color: 'good',
+    #           text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
+    #         }]
+    #       }
+    #   env:
+    #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
