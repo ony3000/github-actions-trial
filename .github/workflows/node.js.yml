@@ -1,0 +1,48 @@
+# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+# workflow의 이름. 나중에 해당 값을 사용할 수 있기 때문에 unique한 값을 권장함.
+name: Test on push/PR at master
+
+# workflow를 동작하게 하는 trigger.
+# 저장소에 특정 이벤트가 발생했을 때 실행되게 할 수 있음.
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# job은 사용자가 정한 플랫폼을 통해, step이라는 일련의 과정을 실행할 수 있음.
+# 여러 개의 job을 실행할 수 있으며, 여러 개의 job을 실행할 때는 서로 정보 교환도 가능.
+# 각 job을 독립적으로 실행하는 것도 가능.
+jobs:
+  build:
+    # job의 이름.
+    name: Sample job name
+
+    # job을 실행하는 플랫폼.
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    # step은 shell script가 될 수도 있고, 누군가 만들어놓은 action을 사용할 수도 있음.
+    steps:
+    
+    # 누군가 만들어놓은 action을 사용할 때는 uses 키워드를 사용해야 함.
+    
+    # git에서 branch checkout하는 것처럼, github action에서는 job을 실행하는 플랫폼으로 checkout하는 과정이 필요.
+    - uses: actions/checkout@v2
+    
+    # job을 실행하는 환경을 nodejs로 설정하는 과정.
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
