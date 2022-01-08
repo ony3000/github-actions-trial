@@ -10,6 +10,12 @@ on:
   push:
     branches: [ master, test ]
 
+env:
+  COLORS:
+    WARNING: "#daa038"
+    DANGER: "#a30200"
+    SUCCESS: "#2eb886"
+
 # job은 사용자가 정한 플랫폼을 통해, step이라는 일련의 과정을 실행할 수 있음.
 # 여러 개의 job을 실행할 수 있으며, 여러 개의 job을 실행할 때는 서로 정보 교환도 가능.
 # 각 job을 독립적으로 실행하는 것도 가능.
@@ -101,7 +107,22 @@ jobs:
     - name: slack-send (slack-github-action)
       uses: slackapi/slack-github-action@v1.16.0
       with:
-        payload: '{"text":":warning: Canceled GitHub Actions"}'
+        payload: |
+          {
+            "attachments": [
+              {
+                "mrkdwn_in": ["text"],
+                "color": "${{ env.COLORS.WARNING }}",
+                "pretext": ":warning: Canceled GitHub Actions",
+                "author_name": "${{ github.actor }}",
+                "author_link": "${{ github.server_url }}/${{ github.actor }}",
+                "author_icon": "${{ github.server_url }}/${{ github.actor }}.png?size=16",
+                "title": "${{ github.workflow }} #${{ github.run_number }}",
+                "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                "text": "Optional `text` that appears within the attachment"
+              }
+            ]
+          }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
@@ -126,7 +147,7 @@ jobs:
             "attachments": [
               {
                 "mrkdwn_in": ["text"],
-                "color": "#a30200",
+                "color": "${{ env.COLORS.DANGER }}",
                 "pretext": ":no_entry: Failed GitHub Actions",
                 "author_name": "${{ github.actor }}",
                 "author_link": "${{ github.server_url }}/${{ github.actor }}",
@@ -161,7 +182,7 @@ jobs:
             "attachments": [
               {
                 "mrkdwn_in": ["text"],
-                "color": "#2eb886",
+                "color": "${{ env.COLORS.SUCCESS }}",
                 "pretext": ":white_check_mark: Succeeded GitHub Actions",
                 "author_name": "${{ github.actor }}",
                 "author_link": "${{ github.server_url }}/${{ github.actor }}",
