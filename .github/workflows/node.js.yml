@@ -44,7 +44,7 @@ jobs:
         # message 형식은 https://api.slack.com/reference/surfaces/formatting 을 참고.
         # 기본 환경변수는 https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables 를 참고.
 
-        payload: '{"text":"${{ github.repository }}의 테스트서버 배포 프로세스를 시작합니다."}'
+        payload: '{"text":"${{ github.repository }}의 test 배포를 시작합니다."}'
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
@@ -53,7 +53,7 @@ jobs:
       if: ${{ github.ref_name == 'master' }}
       uses: slackapi/slack-github-action@v1.16.0
       with:
-        payload: '{"text":"${{ github.repository }}의 상용서버 배포 프로세스를 시작합니다."}'
+        payload: '{"text":"${{ github.repository }}의 production 배포를 시작합니다."}'
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
@@ -111,7 +111,7 @@ jobs:
       uses: 8398a7/action-slack@v3
       with:
         status: cancelled
-        author_name: ${{ github.workflow }} "#"${{ github.run_number }}
+        author_name: ${{ github.workflow }} ${{ '#' }}${{ github.run_number }}
         fields: ${{ env.ACTION_SLACK_FIELDS }}
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
@@ -136,7 +136,7 @@ jobs:
       uses: 8398a7/action-slack@v3
       with:
         status: failure
-        author_name: ${{ github.workflow }} "#"${{ github.run_number }}
+        author_name: ${{ github.workflow }} #${{ github.run_number }}
         fields: ${{ env.ACTION_SLACK_FIELDS }}
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
@@ -161,7 +161,7 @@ jobs:
       uses: 8398a7/action-slack@v3
       with:
         status: success
-        author_name: ${{ github.workflow }} "#"${{ github.run_number }}
+        author_name: ${{ github.workflow }} #${{ github.run_number }}
         fields: ${{ env.ACTION_SLACK_FIELDS }}
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
