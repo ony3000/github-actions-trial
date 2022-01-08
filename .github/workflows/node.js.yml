@@ -111,7 +111,7 @@ jobs:
       uses: 8398a7/action-slack@v3
       with:
         status: cancelled
-        author_name: ${{ github.workflow }} ${{ format('#{0}', github.run_number) }} (${{ needs.build.status }})
+        author_name: ${{ github.workflow }} ${{ format('#{0}', github.run_number) }}
         fields: ${{ env.ACTION_SLACK_FIELDS }}
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
@@ -135,9 +135,34 @@ jobs:
     - name: slack-send (action-slack)
       uses: 8398a7/action-slack@v3
       with:
-        status: failure
-        author_name: ${{ github.workflow }} ${{ format('#{0}', github.run_number) }} (${{ needs.build.status }})
-        fields: ${{ env.ACTION_SLACK_FIELDS }}
+        status: custom
+        fields: workflow,job,commit,repo,ref,author,took
+        custom_payload: |
+          {
+            text: 'Custom Field Check',
+            attachments: [{
+              color: 'danger',
+              title: 'CI Result',
+              text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
+              fields: [
+                {
+                  title: 'lower case',
+                  value: 'LOWER CASE CHECK'.toLowerCase(),
+                  short: true
+                },
+                {
+                  title: 'reverse',
+                  value: 'gnirts esrever'.split('').reverse().join(''),
+                  short: true
+                },
+                {
+                  title: 'long title1',
+                  value: 'long value1',
+                  short: false
+                }
+              ]
+            }]
+          }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
 
@@ -160,8 +185,33 @@ jobs:
     - name: slack-send (action-slack)
       uses: 8398a7/action-slack@v3
       with:
-        status: success
-        author_name: ${{ github.workflow }} ${{ format('#{0}', github.run_number) }} (${{ needs.build.status }})
-        fields: ${{ env.ACTION_SLACK_FIELDS }}
+        status: custom
+        fields: workflow,job,commit,repo,ref,author,took
+        custom_payload: |
+          {
+            text: 'Custom Field Check',
+            attachments: [{
+              color: 'good',
+              title: 'CI Result',
+              text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
+              fields: [
+                {
+                  title: 'lower case',
+                  value: 'LOWER CASE CHECK'.toLowerCase(),
+                  short: true
+                },
+                {
+                  title: 'reverse',
+                  value: 'gnirts esrever'.split('').reverse().join(''),
+                  short: true
+                },
+                {
+                  title: 'long title1',
+                  value: 'long value1',
+                  short: false
+                }
+              ]
+            }]
+          }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
