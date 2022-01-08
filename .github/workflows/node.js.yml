@@ -115,12 +115,19 @@ jobs:
 
     steps:
     - name: slack-send
-      uses: slackapi/slack-github-action@v1.16.0
+      uses: 8398a7/action-slack@v3
       with:
-        payload: '{"text":":x: 배포 실패!"}'
+        status: ${{ job.status }}
+        author_name: Integration Test
+        fields: repo,commit,message,author
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
-        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      # uses: slackapi/slack-github-action@v1.16.0
+      # with:
+      #   payload: '{"text":":x: 배포 실패!"}'
+      # env:
+      #   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
+      #   SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
   cooldown-success:
     needs: build
@@ -131,9 +138,16 @@ jobs:
 
     steps:
     - name: slack-send
-      uses: slackapi/slack-github-action@v1.16.0
+      uses: 8398a7/action-slack@v3
       with:
-        payload: '{"text":":white_check_mark: 배포 성공!"}'
+        status: ${{ job.status }}
+        author_name: Integration Test
+        fields: repo,commit,message,author
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
-        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      # uses: slackapi/slack-github-action@v1.16.0
+      # with:
+      #   payload: '{"text":":white_check_mark: 배포 성공!"}'
+      # env:
+      #   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
+      #   SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
