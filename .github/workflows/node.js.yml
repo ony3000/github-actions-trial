@@ -10,9 +10,6 @@ on:
   push:
     branches: [ master, test ]
 
-env:
-  ACTION_SLACK_FIELDS: repo,commit,author,ref
-
 # job은 사용자가 정한 플랫폼을 통해, step이라는 일련의 과정을 실행할 수 있음.
 # 여러 개의 job을 실행할 수 있으며, 여러 개의 job을 실행할 때는 서로 정보 교환도 가능.
 # 각 job을 독립적으로 실행하는 것도 가능.
@@ -99,14 +96,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: slack-send
-      uses: 8398a7/action-slack@v3
+    - name: slack-send (slack-github-action)
+      uses: slackapi/slack-github-action@v1.16.0
       with:
-        status: cancelled
-        author_name: ${{ github.workflow }} ${{ format('#{0}', github.run_number) }}
-        fields: ${{ env.ACTION_SLACK_FIELDS }}
+        payload: '{"text":":warning: Canceled GitHub Actions"}'
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
   cooldown-failure:
     needs: build
@@ -116,14 +112,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: slack-send
-      uses: 8398a7/action-slack@v3
+    - name: slack-send (slack-github-action)
+      uses: slackapi/slack-github-action@v1.16.0
       with:
-        status: failure
-        author_name: ${{ github.workflow }} ${{ format('#{0}', github.run_number) }}
-        fields: ${{ env.ACTION_SLACK_FIELDS }}
+        payload: '{"text":":no_entry: Failed GitHub Actions"}'
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
   cooldown-success:
     needs: build
@@ -133,11 +128,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: slack-send
-      uses: 8398a7/action-slack@v3
+    - name: slack-send (slack-github-action)
+      uses: slackapi/slack-github-action@v1.16.0
       with:
-        status: success
-        author_name: ${{ github.workflow }} ${{ format('#{0}', github.run_number) }}
-        fields: ${{ env.ACTION_SLACK_FIELDS }}
+        payload: '{"text":":white_check_mark: Succeeded GitHub Actions"}'
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
