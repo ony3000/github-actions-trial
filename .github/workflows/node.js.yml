@@ -99,15 +99,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # - name: slack-send (slack-github-action)
-    #   uses: slackapi/slack-github-action@v1.16.0
-    #   with:
-    #     payload: '{"text":":warning: 배포 취소!"}'
-    #   env:
-    #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
-    #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
-    - name: slack-send (action-slack)
+    - name: slack-send
       uses: 8398a7/action-slack@v3
       with:
         status: cancelled
@@ -124,45 +116,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # - name: slack-send (slack-github-action)
-    #   uses: slackapi/slack-github-action@v1.16.0
-    #   with:
-    #     payload: '{"text":":x: 배포 실패!"}'
-    #   env:
-    #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
-    #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
-    - name: slack-send (action-slack)
+    - name: slack-send
       uses: 8398a7/action-slack@v3
       with:
-        status: custom
-        fields: workflow,job,commit,repo,ref,author,took
-        custom_payload: |
-          {
-            text: 'Custom Field Check',
-            attachments: [{
-              color: 'danger',
-              title: 'CI Result',
-              text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
-              fields: [
-                {
-                  title: 'lower case',
-                  value: 'LOWER CASE CHECK'.toLowerCase(),
-                  short: true
-                },
-                {
-                  title: 'reverse',
-                  value: 'gnirts esrever'.split('').reverse().join(''),
-                  short: true
-                },
-                {
-                  title: 'long title1',
-                  value: 'long value1',
-                  short: false
-                }
-              ]
-            }]
-          }
+        status: failure
+        author_name: ${{ github.workflow }} ${{ format('#{0}', github.run_number) }}
+        fields: ${{ env.ACTION_SLACK_FIELDS }}
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
 
@@ -174,44 +133,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # - name: slack-send (slack-github-action)
-    #   uses: slackapi/slack-github-action@v1.16.0
-    #   with:
-    #     payload: '{"text":":white_check_mark: 배포 성공!"}'
-    #   env:
-    #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
-    #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
-    - name: slack-send (action-slack)
+    - name: slack-send
       uses: 8398a7/action-slack@v3
       with:
-        status: custom
-        fields: workflow,job,commit,repo,ref,author,took
-        custom_payload: |
-          {
-            text: 'Custom Field Check',
-            attachments: [{
-              color: 'good',
-              title: 'CI Result',
-              text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
-              fields: [
-                {
-                  title: 'lower case',
-                  value: 'LOWER CASE CHECK'.toLowerCase(),
-                  short: true
-                },
-                {
-                  title: 'reverse',
-                  value: 'gnirts esrever'.split('').reverse().join(''),
-                  short: true
-                },
-                {
-                  title: 'long title1',
-                  value: 'long value1',
-                  short: false
-                }
-              ]
-            }]
-          }
+        status: success
+        author_name: ${{ github.workflow }} ${{ format('#{0}', github.run_number) }}
+        fields: ${{ env.ACTION_SLACK_FIELDS }}
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
