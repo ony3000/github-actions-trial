@@ -100,7 +100,7 @@ jobs:
     steps:
 
     - name: slack-send (cancelled)
-      if: ${{ cancelled() }}
+      if: ${{ github.action_status == 'cancelled' }}
       uses: slackapi/slack-github-action@v1.16.0
       with:
         payload: '{"text":":warning: 배포 취소!"}'
@@ -109,7 +109,7 @@ jobs:
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
     - name: slack-send (failure)
-      if: ${{ failure() }}
+      if: ${{ github.action_status == 'failure' }}
       uses: slackapi/slack-github-action@v1.16.0
       with:
         payload: '{"text":":x: 배포 실패!"}'
@@ -118,7 +118,7 @@ jobs:
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
     - name: slack-send (success)
-      if: ${{ success() }}
+      if: ${{ github.action_status == 'success' }}
       uses: slackapi/slack-github-action@v1.16.0
       with:
         payload: '{"text":":white_check_mark: 배포 성공!"}'
