@@ -38,25 +38,27 @@ jobs:
 
     steps:
 
-    - name: slack-send (test)
-      if: ${{ github.ref_name == 'test' }}
-      uses: slackapi/slack-github-action@v1.16.0
-      with:
-        # payload 형식은 https://api.slack.com/methods/chat.postMessage 를 참고.
-        # message 형식은 https://api.slack.com/reference/surfaces/formatting 을 참고.
-        # attachment 형식은 https://api.slack.com/reference/messaging/attachments 를 참고.
+    # - name: slack-send (test)
+    #   if: ${{ github.ref_name == 'test' }}
+    #   uses: slackapi/slack-github-action@v1.16.0
+    #   with:
+    #     payload: '{"text":":hammer_and_wrench: ${{ github.repository }}의 test 배포를 시작합니다."}'
+    #   env:
+    #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
+    #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-        # 기본 환경변수는 https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables 를 참고.
+    # payload 형식은 https://api.slack.com/methods/chat.postMessage 를 참고.
+    # message 형식은 https://api.slack.com/reference/surfaces/formatting 을 참고.
+    # attachment 형식은 https://api.slack.com/reference/messaging/attachments 를 참고.
 
-        payload: '{"text":":hammer_and_wrench: ${{ github.repository }}의 test 배포를 시작합니다."}'
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
-        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+    # 기본 환경변수는 https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables 를 참고.
 
     - name: slack-send (production)
       if: ${{ github.ref_name == 'master' }}
+      # id: slack
       uses: slackapi/slack-github-action@v1.16.0
       with:
+        channel-id: 'CAWG96G8L'
         payload: |
           {
             "attachments": [
@@ -72,8 +74,7 @@ jobs:
             ]
           }
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
-        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   build:
     needs: warmup
