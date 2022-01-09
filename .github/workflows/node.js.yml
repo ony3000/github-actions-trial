@@ -80,7 +80,7 @@ jobs:
                 "author_icon": "${{ github.server_url }}/${{ github.actor }}.png?size=64",
                 "title": "Workflow #${{ github.run_number }} ${{ github.workflow }}",
                 "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-                "footer": "Triggered on `<${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}|${{ github.ref_name }}>`",
+                "footer": "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>",
                 "mrkdwn_in": ["text", "footer"]
               }
             ]
