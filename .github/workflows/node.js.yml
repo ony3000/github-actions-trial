@@ -11,9 +11,9 @@ on:
     branches: [ master, test ]
 
 env:
-  WARNING_COLOR: "#daa038"
-  DANGER_COLOR: "#a30200"
-  SUCCESS_COLOR: "#2eb886"
+  WARNING_COLOR: "#ff9800"
+  ERROR_COLOR: "#ef5350"
+  SUCCESS_COLOR: "#4caf50"
 
 # job은 사용자가 정한 플랫폼을 통해, step이라는 일련의 과정을 실행할 수 있음.
 # 여러 개의 job을 실행할 수 있으며, 여러 개의 job을 실행할 때는 서로 정보 교환도 가능.
@@ -170,7 +170,7 @@ jobs:
           {
             "attachments": [
               {
-                "color": "${{ env.DANGER_COLOR }}",
+                "color": "${{ env.ERROR_COLOR }}",
                 "pretext": ":no_entry: Failed GitHub Actions",
                 "fallback": ":no_entry: Failed GitHub Actions",
                 "title": "${{ github.workflow }} #${{ github.run_number }}",
