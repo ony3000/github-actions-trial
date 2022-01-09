@@ -74,11 +74,11 @@ jobs:
             "attachments": [
               {
                 "pretext": ":hammer_and_wrench: 샘플 프로젝트의 production 배포를 시작합니다.",
-                "fallback": ":hammer_and_wrench: 샘플 프로젝트의 production 배포를 시작합니다.",
+                "fallback": ":hammer_and_wrench: 샘플 프로젝트의 production 배포를 시작합니다. (Workflow #${{ github.run_number }})",
                 "author_name": "${{ github.actor }}",
                 "author_link": "${{ github.server_url }}/${{ github.actor }}",
                 "author_icon": "${{ github.server_url }}/${{ github.actor }}.png?size=16",
-                "title": "${{ github.workflow }} #${{ github.run_number }}",
+                "title": "Workflow #${{ github.run_number }} ${{ github.workflow }}",
                 "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
                 "mrkdwn_in": ["text"]
               }
@@ -138,10 +138,9 @@ jobs:
               {
                 "color": "${{ env.WARNING_COLOR }}",
                 "pretext": ":warning: Canceled GitHub Actions",
-                "fallback": ":warning: Canceled GitHub Actions",
-                "title": "${{ github.workflow }} #${{ github.run_number }}",
+                "fallback": ":warning: Workflow #${{ github.run_number }} Canceled",
+                "title": "Workflow #${{ github.run_number }} ${{ github.workflow }}",
                 "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-                "text": "Optional `text` that appears within the attachment",
                 "mrkdwn_in": ["text"]
               }
             ]
@@ -172,10 +171,9 @@ jobs:
               {
                 "color": "${{ env.ERROR_COLOR }}",
                 "pretext": ":no_entry: Failed GitHub Actions",
-                "fallback": ":no_entry: Failed GitHub Actions",
-                "title": "${{ github.workflow }} #${{ github.run_number }}",
+                "fallback": ":no_entry: Workflow #${{ github.run_number }} Failed",
+                "title": "Workflow #${{ github.run_number }} ${{ github.workflow }}",
                 "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-                "text": "Optional `text` that appears within the attachment",
                 "mrkdwn_in": ["text"]
               }
             ]
@@ -206,10 +204,9 @@ jobs:
               {
                 "color": "${{ env.SUCCESS_COLOR }}",
                 "pretext": ":white_check_mark: Succeeded GitHub Actions",
-                "fallback": ":white_check_mark: Succeeded GitHub Actions",
-                "title": "${{ github.workflow }} #${{ github.run_number }}",
+                "fallback": ":white_check_mark: Workflow #${{ github.run_number }} Succeeded",
+                "title": "Workflow #${{ github.run_number }} ${{ github.workflow }}",
                 "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-                "text": "Optional `text` that appears within the attachment",
                 "mrkdwn_in": ["text"]
               }
             ]
