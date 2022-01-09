@@ -80,6 +80,7 @@ jobs:
                 "author_icon": "${{ github.server_url }}/${{ github.actor }}.png?size=16",
                 "title": "Workflow #${{ github.run_number }} ${{ github.workflow }}",
                 "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                "text": "`<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>` - github commit message",
                 "mrkdwn_in": ["text"]
               }
             ]
