@@ -19,18 +19,29 @@ env:
 # 여러 개의 job을 실행할 수 있으며, 여러 개의 job을 실행할 때는 서로 정보 교환도 가능.
 # 각 job을 독립적으로 실행하는 것도 가능.
 jobs:
-  # check:
-  #   name: Post message to slack
-  #   runs-on: ubuntu-latest
+  check:
+    name: Post message to slack
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #   - name: slack-send
-  #     uses: slackapi/slack-github-action@v1.16.0
-  #     with:
-  #       payload: '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"```GITHUB_WORKFLOW=${{ github.workflow }}\nGITHUB_RUN_ID=${{ github.run_id }}\nGITHUB_RUN_NUMBER=${{ github.run_number }}\nGITHUB_JOB=${{ github.job }}\nGITHUB_ACTION=${{ github.action }}\nGITHUB_ACTION_PATH=${{ github.action_path }}\nGITHUB_ACTIONS=${{ github.actions }}\nGITHUB_ACTOR=${{ github.actor }}\nGITHUB_REPOSITORY=${{ github.repository }}\nGITHUB_EVENT_NAME=${{ github.event_name }}\nGITHUB_EVENT_PATH=${{ github.event_path }}\nGITHUB_WORKSPACE=${{ github.workspace }}\nGITHUB_SHA=${{ github.sha }}\nGITHUB_REF=${{ github.ref }}\nGITHUB_REF_NAME=${{ github.ref_name }}\nGITHUB_REF_PROTECTED=${{ github.ref_protected }}\nGITHUB_REF_TYPE=${{ github.ref_type }}\nGITHUB_HEAD_REF=${{ github.head_ref }}\nGITHUB_BASE_REF=${{ github.base_ref }}\nGITHUB_SERVER_URL=${{ github.server_url }}\nGITHUB_API_URL=${{ github.api_url }}\nGITHUB_GRAPHQL_URL=${{ github.graphql_url }}\nRUNNER_NAME=${{ runner.name }}\nRUNNER_OS=${{ runner.os }}\nRUNNER_ARCH=${{ runner.arch }}\nRUNNER_TEMP=${{ runner.temp }}\nRUNNER_TOOL_CACHE=${{ runner.tool_cache }}\n```"}}]}'
-  #     env:
-  #       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
-  #       SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+    steps:
+    - name: slack-send
+      uses: slackapi/slack-github-action@v1.16.0
+      with:
+        channel-id: 'CAWG96G8L'
+        payload: |
+          {
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "```GITHUB_WORKFLOW=${{ github.workflow }}\nGITHUB_RUN_ID=${{ github.run_id }}\nGITHUB_RUN_NUMBER=${{ github.run_number }}\nGITHUB_JOB=${{ github.job }}\nGITHUB_ACTION=${{ github.action }}\nGITHUB_ACTION_PATH=${{ github.action_path }}\nGITHUB_ACTIONS=${{ github.actions }}\nGITHUB_ACTOR=${{ github.actor }}\nGITHUB_REPOSITORY=${{ github.repository }}\nGITHUB_EVENT_NAME=${{ github.event_name }}\nGITHUB_EVENT_PATH=${{ github.event_path }}\nGITHUB_WORKSPACE=${{ github.workspace }}\nGITHUB_SHA=${{ github.sha }}\nGITHUB_REF=${{ github.ref }}\nGITHUB_REF_NAME=${{ github.ref_name }}\nGITHUB_REF_PROTECTED=${{ github.ref_protected }}\nGITHUB_REF_TYPE=${{ github.ref_type }}\nGITHUB_HEAD_REF=${{ github.head_ref }}\nGITHUB_BASE_REF=${{ github.base_ref }}\nGITHUB_SERVER_URL=${{ github.server_url }}\nGITHUB_API_URL=${{ github.api_url }}\nGITHUB_GRAPHQL_URL=${{ github.graphql_url }}\nRUNNER_NAME=${{ runner.name }}\nRUNNER_OS=${{ runner.os }}\nRUNNER_ARCH=${{ runner.arch }}\nRUNNER_TEMP=${{ runner.temp }}\nRUNNER_TOOL_CACHE=${{ runner.tool_cache }}\n```"
+                }
+              }
+            ]
+          }
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   warmup:
     name: Post begin-message to slack
@@ -42,10 +53,10 @@ jobs:
     #   if: ${{ github.ref_name == 'test' }}
     #   uses: slackapi/slack-github-action@v1.16.0
     #   with:
+    #     channel-id: 'CAWG96G8L'
     #     payload: '{"text":":hammer_and_wrench: ${{ github.repository }}의 test 배포를 시작합니다."}'
     #   env:
-    #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
-    #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+    #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
     # payload 형식은 https://api.slack.com/methods/chat.postMessage 를 참고.
     # message 형식은 https://api.slack.com/reference/surfaces/formatting 을 참고.
@@ -55,7 +66,6 @@ jobs:
 
     - name: slack-send (production)
       if: ${{ github.ref_name == 'master' }}
-      # id: slack
       uses: slackapi/slack-github-action@v1.16.0
       with:
         channel-id: 'CAWG96G8L'
@@ -120,6 +130,7 @@ jobs:
     - name: slack-send (slack-github-action)
       uses: slackapi/slack-github-action@v1.16.0
       with:
+        channel-id: 'CAWG96G8L'
         payload: |
           {
             "attachments": [
@@ -134,8 +145,7 @@ jobs:
             ]
           }
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
-        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   cooldown-failure:
     needs: build
@@ -148,6 +158,8 @@ jobs:
     - name: slack-send (slack-github-action)
       uses: slackapi/slack-github-action@v1.16.0
       with:
+        channel-id: 'CAWG96G8L'
+
         # works fine
         # payload: '{"text":":no_entry: Failed GitHub Actions"}'
         # payload: '{"attachments":[{"pretext":":no_entry: pre-hello","text":":no_entry: text-world"}]}'
@@ -166,8 +178,7 @@ jobs:
             ]
           }
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
-        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   cooldown-success:
     needs: build
@@ -180,6 +191,8 @@ jobs:
     - name: slack-send (slack-github-action)
       uses: slackapi/slack-github-action@v1.16.0
       with:
+        channel-id: 'CAWG96G8L'
+
         # works fine
         # payload: '{"text":":white_check_mark: Succeeded GitHub Actions"}'
         # payload: '{"attachments":[{"pretext":":white_check_mark: pre-hello","text":":white_check_mark: text-world"}]}'
@@ -198,5 +211,4 @@ jobs:
             ]
           }
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_HOOK_URL }}
-        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
