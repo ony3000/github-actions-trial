@@ -27,7 +27,9 @@ jobs:
     - name: View context attributes
       uses: actions/github-script@v5
       with:
-        script: console.log(context)
+        script: |
+          console.log(context);
+          console.log(context.payload.commits[0]);
 
     # - name: slack-send
     #   uses: slackapi/slack-github-action@v1.16.0
