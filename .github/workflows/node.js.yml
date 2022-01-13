@@ -24,12 +24,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: View context attributes
-      uses: actions/github-script@v5
-      with:
-        script: |
-          console.log(context);
-          console.log(context.payload.commits[0]);
+    # - name: View context attributes
+    #   uses: actions/github-script@v5
+    #   with:
+    #     script: |
+    #       console.log(context);
+    #       console.log(context.payload.commits[0]);
+
+    - name: Declare variable(s)
+      id: vars
+      shell: bash
+      run: |
+        echo "::set-output name=short_sha::$(git rev-parse --short HEAD)"
 
     - name: slack-send
       uses: slackapi/slack-github-action@v1.16.0
@@ -49,7 +55,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "```GITHUB_SHA=${ GITHUB_SHA::8 }\nGITHUB_EVENT_HEADCOMMIT_MESSAGE=${{ github.event.head_commit.message }}```"
+                  "text": "```GITHUB_SHA=${{ steps.vars.outputs.short_sha }}\nGITHUB_EVENT_HEADCOMMIT_MESSAGE=${{ github.event.head_commit.message }}```"
                 }
               }
             ]
