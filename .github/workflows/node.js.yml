@@ -14,6 +14,7 @@ env:
   WARNING_COLOR: "#ff9800"
   ERROR_COLOR: "#ef5350"
   SUCCESS_COLOR: "#4caf50"
+  SHORT_SHA: $(echo $GITHUB_SHA | cut -c 1-8)
 
 # job은 사용자가 정한 플랫폼을 통해, step이라는 일련의 과정을 실행할 수 있음.
 # 여러 개의 job을 실행할 수 있으며, 여러 개의 job을 실행할 때는 서로 정보 교환도 가능.
@@ -55,7 +56,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "```GITHUB_SHA=${{ steps.vars.outputs.short_sha }}\nGITHUB_EVENT_HEADCOMMIT_MESSAGE=${{ github.event.head_commit.message }}```"
+                  "text": "```GITHUB_SHA=${{ env.SHORT_SHA }}\nGITHUB_EVENT_HEADCOMMIT_MESSAGE=${{ github.event.head_commit.message }}```"
                 }
               }
             ]
