@@ -49,7 +49,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "```GITHUB_EVENT_COMMITS[0]_MESSAGE=${{ github.event.commits[0].message }}\nGITHUB_EVENT_HEADCOMMIT_MESSAGE=${{ github.event.head_commit.message }}\nGITHUB_PAYLOAD_HEADCOMMIT_MESSAGE=${{ github.payload.head_commit.message }}```"
+                  "text": "```GITHUB_SHA=${{ github.sha.slice(0, 8) }}\nGITHUB_EVENT_HEADCOMMIT_MESSAGE=${{ github.event.head_commit.message }}```"
                 }
               }
             ]
