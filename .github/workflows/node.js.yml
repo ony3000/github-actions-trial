@@ -66,6 +66,7 @@ jobs:
       id: set-result
       with:
         script: |
+          console.log(context)
           return context.sha.slice(0, 8)
         result-encoding: string
 
@@ -106,6 +107,15 @@ jobs:
               }
             ]
           }
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+    - name: slack-notify-build
+      uses: voxmedia/github-action-slack-notify-build@v1.1.2
+      with:
+        channel_id: 'CAWG96G8L'
+        status: LOREM_IPSUM
+        color: '#f26224'
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
