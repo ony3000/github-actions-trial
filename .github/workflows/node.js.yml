@@ -69,13 +69,20 @@ jobs:
           console.log(context);
 
           const result = {
-            pretext: ':hammer_and_wrench: 샘플 프로젝트의 production 배포를 시작합니다.',
-            author_name: context.payload.sender.login,
-            author_link: context.payload.sender.html_url,
-            author_icon: context.payload.sender.avatar_url,
-            title: `Workflow #${context.runNumber} ${context.workflow}`,
-            footer: `<${context.payload.repository.html_url}|${context.payload.repository.full_name}>`,
-            mrkdwn_in: ['text', 'footer'],
+            attachments: [
+              {
+                pretext: ':hammer_and_wrench: 샘플 프로젝트의 production 배포를 시작합니다.',
+                fallback: ':hammer_and_wrench: 샘플 프로젝트의 production 배포를 시작합니다.',
+                author_name: context.payload.sender.login,
+                author_link: context.payload.sender.html_url,
+                author_icon: context.payload.sender.avatar_url,
+                title: `Workflow #${context.runNumber} ${context.workflow}`,
+                title_link: `${context.payload.repository.html_url}/actions/runs/${context.runId}`,
+                text: `\`<${context.payload.head_commit.url}|${context.sha.slice(0, 8)}>\` - ${context.payload.head_commit.message}`,
+                footer: `<${context.payload.repository.html_url}|${context.payload.repository.full_name}>`,
+                mrkdwn_in: ['text', 'footer'],
+              },
+            ],
           };
           console.log(result);
 
@@ -92,12 +99,7 @@ jobs:
       uses: slackapi/slack-github-action@v1.16.0
       with:
         channel-id: 'CAWG96G8L'
-        payload: |
-          {
-            "attachments": [
-              ${{ steps.set-result.outputs.result }}
-            ]
-          }
+        payload: ${{ steps.set-result.outputs.result }}
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
