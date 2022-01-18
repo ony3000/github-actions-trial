@@ -67,10 +67,10 @@ jobs:
       with:
         script: |
           console.log(context)
-          return {
+          return JSON.stringify({
             message_header: context.payload.head_commit.message.split('\n')[0],
             short_sha: context.sha.slice(0, 8),
-          }
+          })
 
     # payload 형식은 https://api.slack.com/methods/chat.postMessage 를 참고.
     # message 형식은 https://api.slack.com/reference/surfaces/formatting 을 참고.
