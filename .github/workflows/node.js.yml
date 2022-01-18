@@ -67,17 +67,10 @@ jobs:
       with:
         script: |
           console.log(context)
-          return context.sha.slice(0, 8)
-        result-encoding: string
-
-    # - name: slack-send (test)
-    #   if: ${{ github.ref_name == 'test' }}
-    #   uses: slackapi/slack-github-action@v1.16.0
-    #   with:
-    #     channel-id: 'CAWG96G8L'
-    #     payload: '{"text":":hammer_and_wrench: ${{ github.repository }}의 test 배포를 시작합니다."}'
-    #   env:
-    #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          return {
+            message_header: context.payload.head_commit.message.split('\n')[0],
+            short_sha: context.sha.slice(0, 8),
+          }
 
     # payload 형식은 https://api.slack.com/methods/chat.postMessage 를 참고.
     # message 형식은 https://api.slack.com/reference/surfaces/formatting 을 참고.
@@ -101,7 +94,7 @@ jobs:
                 "author_icon": "${{ github.server_url }}/${{ github.actor }}.png?size=64",
                 "title": "Workflow #${{ github.run_number }} ${{ github.workflow }}",
                 "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-                "text": "`<${{ github.event.head_commit.url }}|${{ steps.set-result.outputs.result }}>` - ${{ github.event.head_commit.message }}",
+                "text": "`<${{ github.event.head_commit.url }}|${{ steps.set-result.outputs.result.short_sha }}>` - ${{ steps.set-result.outputs.result.message_header }}",
                 "footer": "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>",
                 "mrkdwn_in": ["text", "footer"]
               }
@@ -110,14 +103,14 @@ jobs:
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
-    - name: slack-notify-build
-      uses: voxmedia/github-action-slack-notify-build@v1.1.2
-      with:
-        channel_id: 'CAWG96G8L'
-        status: LOREM_IPSUM
-        color: '#f26224'
-      env:
-        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    # - name: slack-notify-build
+    #   uses: voxmedia/github-action-slack-notify-build@v1.1.2
+    #   with:
+    #     channel_id: 'CAWG96G8L'
+    #     status: LOREM_IPSUM
+    #     color: '#f26224'
+    #   env:
+    #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   build:
     needs: warmup
