@@ -66,11 +66,20 @@ jobs:
       id: set-result
       with:
         script: |
-          console.log(context)
-          return JSON.stringify({
-            message_header: context.payload.head_commit.message.split('\n')[0],
-            short_sha: context.sha.slice(0, 8),
-          })
+          console.log(context);
+
+          const result = {
+            pretext: ':hammer_and_wrench: 샘플 프로젝트의 production 배포를 시작합니다.',
+            author_name: context.payload.sender.login,
+            author_link: context.payload.sender.html_url,
+            author_icon: context.payload.sender.avatar_url,
+            title: `Workflow #${context.runNumber} ${context.workflow}`,
+            footer: `<${context.payload.repository.html_url}|${context.payload.repository.full_name}>`,
+            mrkdwn_in: ['text', 'footer'],
+          };
+          console.log(result);
+
+          return result;
 
     # payload 형식은 https://api.slack.com/methods/chat.postMessage 를 참고.
     # message 형식은 https://api.slack.com/reference/surfaces/formatting 을 참고.
@@ -86,18 +95,7 @@ jobs:
         payload: |
           {
             "attachments": [
-              {
-                "pretext": ":hammer_and_wrench: 샘플 프로젝트의 production 배포를 시작합니다.",
-                "fallback": ":hammer_and_wrench: 샘플 프로젝트의 production 배포를 시작합니다. (Workflow #${{ github.run_number }})",
-                "author_name": "${{ github.actor }}",
-                "author_link": "${{ github.server_url }}/${{ github.actor }}",
-                "author_icon": "${{ github.server_url }}/${{ github.actor }}.png?size=64",
-                "title": "Workflow #${{ github.run_number }} ${{ github.workflow }}",
-                "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-                "text": "`<${{ github.event.head_commit.url }}|${{ steps.set-result.outputs.result.short_sha }}>` - ${{ steps.set-result.outputs.result.message_header }}",
-                "footer": "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>",
-                "mrkdwn_in": ["text", "footer"]
-              }
+              ${{ steps.set-result.outputs.result }}
             ]
           }
       env:
