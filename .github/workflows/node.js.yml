@@ -68,18 +68,19 @@ jobs:
         script: |
           console.log(context);
 
+          const { payload } = context;
           const result = {
             attachments: [
               {
                 pretext: ':hammer_and_wrench: 샘플 프로젝트의 production 배포를 시작합니다.',
                 fallback: ':hammer_and_wrench: 샘플 프로젝트의 production 배포를 시작합니다.',
-                author_name: context.payload.sender.login,
-                author_link: context.payload.sender.html_url,
-                author_icon: context.payload.sender.avatar_url,
+                author_name: payload.sender.login,
+                author_link: payload.sender.html_url,
+                author_icon: payload.sender.avatar_url,
                 title: `Workflow #${context.runNumber} ${context.workflow}`,
-                title_link: `${context.payload.repository.html_url}/actions/runs/${context.runId}`,
-                text: `\`<${context.payload.head_commit.url}|${context.sha.slice(0, 8)}>\` - ${context.payload.head_commit.message.split('\n')[0]}`,
-                footer: `<${context.payload.repository.html_url}|${context.payload.repository.full_name}>`,
+                title_link: `${payload.repository.html_url}/actions/runs/${context.runId}`,
+                text: `\`<${payload.head_commit.url}|${payload.head_commit.id.slice(0, 8)}>\` - ${payload.head_commit.message.split('\n')[0]}`,
+                footer: `<${payload.repository.html_url}|${payload.repository.full_name}>`,
                 mrkdwn_in: ['text', 'footer'],
               },
             ],
