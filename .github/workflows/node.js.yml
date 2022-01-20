@@ -79,7 +79,7 @@ jobs:
                 author_icon: payload.sender.avatar_url,
                 title: `Workflow #${context.runNumber} ${context.workflow}`,
                 title_link: `${payload.repository.html_url}/actions/runs/${context.runId}`,
-                text: `\`<${payload.head_commit.url}|${payload.head_commit.id.slice(0, 8)}>\` - ${payload.head_commit.message.split('\n')[0]}`,
+                text: `\`<${payload.head_commit.url}|${payload.head_commit.id.slice(0, 8)}>\` - ${payload.head_commit.message}`,
                 footer: `<${payload.repository.html_url}|${payload.repository.full_name}>`,
                 mrkdwn_in: ['text', 'footer'],
               },
